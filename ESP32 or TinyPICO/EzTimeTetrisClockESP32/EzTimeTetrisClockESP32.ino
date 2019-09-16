@@ -99,7 +99,6 @@ unsigned long oneSecondLoopDue = 0;
 
 bool showColon = true;
 volatile bool finishedAnimating = false;
-bool displayIntro = true;
 
 String lastDisplayedTime = "";
 String lastDisplayedAmPm = "";
@@ -127,10 +126,7 @@ void animationHandler()
     display.clearDisplay();
 #endif
     //display.fillScreen(tetris.tetrisBLACK);
-    if (displayIntro) {
-      finishedAnimating = tetris.drawText(1, 21);
-    } else {
-      if (twelveHourFormat) {
+        if (twelveHourFormat) {
         // Place holders for checking are any of the tetris objects
         // currently still animating.
         bool tetris1Done = false;
@@ -150,7 +146,7 @@ void animationHandler()
       } else {
         finishedAnimating = tetris.drawNumbers(2, 26, showColon);
       }
-    }
+      
 #ifdef double_buffer
     display.showBuffer();
 #endif
@@ -158,20 +154,6 @@ void animationHandler()
 #ifndef double_buffer
   portEXIT_CRITICAL_ISR(&timerMux);
 #endif
-}
-
-void drawIntro(int x = 0, int y = 0)
-{
-  tetris.drawChar("P", x, y, tetris.tetrisCYAN);
-  tetris.drawChar("o", x + 5, y, tetris.tetrisMAGENTA);
-  tetris.drawChar("w", x + 11, y, tetris.tetrisYELLOW);
-  tetris.drawChar("e", x + 17, y, tetris.tetrisGREEN);
-  tetris.drawChar("r", x + 22, y, tetris.tetrisBLUE);
-  tetris.drawChar("e", x + 27, y, tetris.tetrisRED);
-  tetris.drawChar("d", x + 32, y, tetris.tetrisWHITE);
-  tetris.drawChar(" ", x + 37, y, tetris.tetrisMAGENTA);
-  tetris.drawChar("b", x + 42, y, tetris.tetrisYELLOW);
-  tetris.drawChar("y", x + 47, y, tetris.tetrisGREEN);
 }
 
 void drawConnecting(int x = 0, int y = 0)
@@ -253,28 +235,15 @@ void setup() {
 #else
   display.clearDisplay();
 #endif
-  // "Powered By"
-  drawIntro(6, 12);
-#ifdef double_buffer
-  display.showBuffer();
-#endif
-  delay(2000);
 
   // Start the Animation Timer
-  tetris.setText("TINY PICO");
+//  tetris.setText("TINY PICO");
   animationTimer = timerBegin(1, 80, true);
   timerAttachInterrupt(animationTimer, &animationHandler, true);
   timerAlarmWrite(animationTimer, 100000, true);
   timerAlarmEnable(animationTimer);
 
-  // Wait for the animation to finish
-  while (!finishedAnimating)
-  {
-    delay(10); //waiting for intro to finish
-  }
-  delay(2000);
   finishedAnimating = false;
-  displayIntro = false;
   tetris.scale = 2;
 }
 
