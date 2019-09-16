@@ -746,22 +746,22 @@ void TetrisMatrixDraw::drawColon(int x, int y, uint16_t colonColour){
 void TetrisMatrixDraw::intialiseColors(){
     this->tetrisRED = 0xF800;
     this->tetrisGREEN = 0x07E0;
-    this->tetrisBLUE = 0x325F;
+    this->tetrisBLUE = 0x003E;
     this->tetrisWHITE = 0xFFFF;
     this->tetrisYELLOW = 0xFFE0;
     this->tetrisCYAN = 0x07FF;
-    this->tetrisMAGENTA = 0xF81F;
+    this->tetrisMAGENTA = 0x981F;
     this->tetrisORANGE = 0xFB00;
     this->tetrisBLACK = 0x0000;
     
-    this->tetrisColors[0] = this->tetrisRED; 
-    this->tetrisColors[1] = this->tetrisGREEN; 
-    this->tetrisColors[2] = this->tetrisBLUE; 
+    this->tetrisColors[0] = this->tetrisYELLOW; 
+    this->tetrisColors[1] = this->tetrisRED; 
+    this->tetrisColors[2] = this->tetrisORANGE; 
     this->tetrisColors[3] = this->tetrisWHITE; 
-    this->tetrisColors[4] = this->tetrisYELLOW; 
-    this->tetrisColors[5] = this->tetrisCYAN; 
+    this->tetrisColors[4] = this->tetrisCYAN; 
+    this->tetrisColors[5] = this->tetrisBLUE; 
     this->tetrisColors[6] = this->tetrisMAGENTA;
-    this->tetrisColors[7] = this->tetrisORANGE; 
+    this->tetrisColors[7] = this->tetrisGREEN; 
     this->tetrisColors[8] = this->tetrisBLACK;
 }
 
