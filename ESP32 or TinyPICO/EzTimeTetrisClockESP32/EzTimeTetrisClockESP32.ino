@@ -198,7 +198,7 @@ void setup() {
   // Intialise display library
 //  display.begin(16, SPI_BUS_CLK, 27, SPI_BUS_MISO, SPI_BUS_SS); // TinyPICO
   display.begin(16); // Generic ESP32 including Huzzah
-//  display.setBrightness(25);
+  display.setBrightness(85); // Obvious flickering below ~85.  recommend a minimum of 85/255.
   display.flushDisplay();
 
   // Setup timer for driving display
