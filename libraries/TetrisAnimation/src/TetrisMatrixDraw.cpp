@@ -750,7 +750,7 @@ void TetrisMatrixDraw::intialiseColors(){
     this->tetrisWHITE = 0xFFFF;
     this->tetrisYELLOW = 0xFFE0;
     this->tetrisCYAN = 0x07FF;
-    this->tetrisMAGENTA = 0x981F;
+    this->tetrisMAGENTA = 0x601F;
     this->tetrisORANGE = 0xFB00;
     this->tetrisBLACK = 0x0000;
     
