@@ -68,6 +68,8 @@ bool twelveHourFormat = true;
 // but the most significant number will only be replaced every 10 minutes.
 // When true, all digits will be replaced every minute.
 bool forceRefresh = false;
+
+#define lightPin 27
 // -----------------------------
 
 // ----- Wiring -------
@@ -177,8 +179,8 @@ void setup() {
   pinMode(4, OUTPUT);
   digitalWrite(4, LOW);
 
-  // use pin 12 as ambient light sensor
-  pinMode(12, INPUT);
+  // use pin lightPin as ambient light sensor
+  pinMode(lightPin, INPUT);
 
   // Attempt to connect to Wifi network:
   Serial.print("Connecting Wifi: ");
@@ -314,7 +316,7 @@ void handleColonAfterAnimation() {
 }
 
 void updateBrightness() {
-  bool val = digitalRead(12); // read the value from pin 12 (d0 on ambient light sensor)
+  bool val = digitalRead(lightPin); // read the value from pin lightPin (d0 on ambient light sensor)
   Serial.println(val);
   if (!val){
     display.setBrightness(MIN_BRIGHTNESS);
