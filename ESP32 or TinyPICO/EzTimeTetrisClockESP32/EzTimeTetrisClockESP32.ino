@@ -87,7 +87,7 @@ hw_timer_t * timer = NULL;
 hw_timer_t * animationTimer = NULL;
 
 // PxMATRIX display(32,16,P_LAT, P_OE,P_A,P_B,P_C);
- PxMATRIX display(64,32,P_LAT, P_OE,P_A,P_B,P_C,P_D);
+PxMATRIX display(64, 32, P_LAT, P_OE, P_A, P_B, P_C, P_D);
 //PxMATRIX display(64, 32, P_LAT, P_OE, P_A, P_B, P_C, P_D, P_E);
 
 TetrisMatrixDraw tetris(display); // Main clock
@@ -126,27 +126,27 @@ void animationHandler()
     display.clearDisplay();
 #endif
     //display.fillScreen(tetris.tetrisBLACK);
-        if (twelveHourFormat) {
-        // Place holders for checking are any of the tetris objects
-        // currently still animating.
-        bool tetris1Done = false;
-        bool tetris2Done = false;
-        bool tetris3Done = false;
+    if (twelveHourFormat) {
+      // Place holders for checking are any of the tetris objects
+      // currently still animating.
+      bool tetris1Done = false;
+      bool tetris2Done = false;
+      bool tetris3Done = false;
 
-        tetris1Done = tetris.drawNumbers(-6, 26, showColon);
-        tetris2Done = tetris2.drawText(56, 25);
+      tetris1Done = tetris.drawNumbers(-6, 26, showColon);
+      tetris2Done = tetris2.drawText(56, 25);
 
-        // Only draw the top letter once the bottom letter is finished.
-        if (tetris2Done) {
-          tetris3Done = tetris3.drawText(56, 15);
-        }
-
-        finishedAnimating = tetris1Done && tetris2Done && tetris3Done;
-
-      } else {
-        finishedAnimating = tetris.drawNumbers(2, 26, showColon);
+      // Only draw the top letter once the bottom letter is finished.
+      if (tetris2Done) {
+        tetris3Done = tetris3.drawText(56, 15);
       }
-      
+
+      finishedAnimating = tetris1Done && tetris2Done && tetris3Done;
+
+    } else {
+      finishedAnimating = tetris.drawNumbers(2, 26, showColon);
+    }
+
 #ifdef double_buffer
     display.showBuffer();
 #endif
@@ -173,6 +173,13 @@ void drawConnecting(int x = 0, int y = 0)
 void setup() {
   Serial.begin(115200);
 
+  // use pin 4 as a GND
+  pinMode(4, OUTPUT);
+  digitalWrite(4, LOW);
+
+  // use pin 12 as ambient light sensor
+  pinMode(12, INPUT);
+
   // Attempt to connect to Wifi network:
   Serial.print("Connecting Wifi: ");
   Serial.println(ssid);
@@ -196,9 +203,11 @@ void setup() {
   // as it will crash!
 
   // Intialise display library
-//  display.begin(16, SPI_BUS_CLK, 27, SPI_BUS_MISO, SPI_BUS_SS); // TinyPICO
+  //  display.begin(16, SPI_BUS_CLK, 27, SPI_BUS_MISO, SPI_BUS_SS); // TinyPICO
   display.begin(16); // Generic ESP32 including Huzzah
-  display.setBrightness(85); // Obvious flickering below ~85.  recommend a minimum of 85/255.
+#define MIN_BRIGHTNESS 85
+#define MAX_BRIGHTNESS 255
+  display.setBrightness(MIN_BRIGHTNESS); // Obvious flickering below ~85.  recommend a minimum of 85/255.
   display.flushDisplay();
 
   // Setup timer for driving display
@@ -237,7 +246,7 @@ void setup() {
 #endif
 
   // Start the Animation Timer
-//  tetris.setText("TINY PICO");
+  //  tetris.setText("TINY PICO");
   animationTimer = timerBegin(1, 80, true);
   timerAttachInterrupt(animationTimer, &animationHandler, true);
   timerAlarmWrite(animationTimer, 100000, true);
@@ -304,10 +313,19 @@ void handleColonAfterAnimation() {
   tetris.drawColon(x, y, colour);
 }
 
+void updateBrightness() {
+  bool val = digitalRead(12); // read the value from pin 12 (d0 on ambient light sensor)
+  Serial.println(val);
+  if (!val){
+    display.setBrightness(MIN_BRIGHTNESS);
+  }
+  else display.setBrightness(0);
+}
 
 void loop() {
   unsigned long now = millis();
   if (now > oneSecondLoopDue) {
+    updateBrightness();
     // We can call this often, but it will only
     // update when it needs to
     setMatrixTime();
